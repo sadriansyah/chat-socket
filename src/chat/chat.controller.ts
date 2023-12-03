@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { JwtGuard } from 'src/guard/jwt.guard';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { Room } from 'src/schemas/room.schema';
+import { JwtGuard } from '../guard/jwt.guard';
+import { GetUser } from '../auth/get-user.decorator';
+import { Room } from '../schemas/room.schema';
 import { SendMessageDto } from './dto/send-message.dto';
 
 @UseGuards(JwtGuard)

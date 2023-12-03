@@ -7,9 +7,9 @@ import {
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Auth, AuthDocument } from 'src/schemas/auth.schema';
-import { UserService } from 'src/user/user.service';
-import { refreshTokenConfig } from 'src/config/jwt.config';
+import { Auth, AuthDocument } from '../schemas/auth.schema';
+import { UserService } from '../user/user.service';
+import { refreshTokenConfig } from '../config/jwt.config';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
