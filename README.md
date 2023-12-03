@@ -1,73 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Chat App NestJS WEBSOCKET
+This project using NestJS and MongoDB, with purpose of the test to build an API socket based for chating
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Features
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Login and Register
+- API Chat
+- Socket Based API Chat
+- Guard Implementation for Websocket and API
 
 ## Installation
 
+Clone this project then run `yarn` to install package and plugin. make sure you are installed mongoDB databases and created collection with name `chatroom`. Run this command
 ```bash
-$ yarn install
+  cd chat-socket
+  yarn
+  cp .env.example .env
+  yarn start:dev
+```
+after that you can open Postman or anything, This project will run in `http://localhost:3000` and websockets will run with same port.
+
+To get started, please register using by POST to `/auth/register` with body data
+```bash
+   {
+    "username": "user",
+    "password": "12345678"
+   }
 ```
 
-## Running the app
+## Web Socket Event and Listener
+To use this project as socket based API, you need to listen and subscribe for these events.
+| Event             | Description                                                                |
+| ----------------- | ------------------------------------------------------------------ |
+| room | Listen activity in room |
+| message | Listen Message Incoming |
+| createRoom | Subscribe event to create a new room |
+| joinRoom | Subscribe event to join room |
+| sendMessage | Subscribe event to send message in a room |
+| sendPrivate | Subscribe event to send message as private chat |
+| getMessage | Subscribe event to get previous message in room or private |
 
-```bash
-# development
-$ yarn run start
 
-# watch mode
-$ yarn run start:dev
+## API Documentation
 
-# production mode
-$ yarn run start:prod
+#### Register
+
+```http
+  POST /auth/register
 ```
 
-## Test
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `username` | `string` | **Required**. |
+| `password` | `string` | **Required**. |
 
-```bash
-# unit tests
-$ yarn run test
+#### Login
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```http
+  POST /auth/login
 ```
 
-## Support
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `username` | `string` | **Required** |
+| `password` | `string` | **Required** |
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## CHAT API
+Put access token as bearer token
+| Headers | Value     | 
+| :-------- | :------- |
+| `Authorization`      | `access_token` |
 
-## Stay in touch
+#### Create Room
+```http
+  POST /chat/create-room
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | **Required**. |
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
+#### Join Room
+```http
+  POST /chat/join-room
+```
 
-Nest is [MIT licensed](LICENSE).
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `roomId`      | `string` | **Required**. |
+
+
+#### Get Message by Room ID
+```http
+  GET /chat/room/:id
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | room id. |
+
+#### Send Message
+```http
+  POST /chat/send-message
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `roomId`      | `string` | room id. |
+| `content`      | `string` | Text chat |
+
+#### Send Private Message
+```http
+  POST /chat/send-message
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `toId`      | `string` | to user ID. |
+| `content`      | `string` | Text chat |
+
+
+#### Get Message
+```http
+  GET /chat/send-message
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `roomId`      | `string` | room id. |
+
+#### Get Private Message
+```http
+  GET /chat/send-message
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `toId`      | `string` | room id. |
+
+## Authors
+
+- [@sadriansyah](https://github.com/sadriansyah)
